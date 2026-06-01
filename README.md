@@ -30,16 +30,27 @@ Note: The SDK uses `ctypes` to load the native client library; make sure the nat
 
 Install the package and development requirements in a virtual environment:
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
+### Windows (PowerShell)
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
 pip install --upgrade pip
-pip install .
+pip install -e .
 ```
 
-If you want to install editable for local development:
+### Windows (Command Prompt)
+```cmd
+python -m venv venv
+.\venv\Scripts\activate.bat
+pip install --upgrade pip
+pip install -e .
+```
 
+### Linux / macOS
 ```bash
+python -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
 pip install -e .
 ```
 
@@ -76,7 +87,10 @@ configure_logging(LogConfig(
     console_level="INFO"
 ))
 
-credentials = LoginCredentials(node="MY_NODE", password="PASSWORD")
+credentials = LoginCredentials(
+    node=os.getenv("SP_NODE"),
+    password=os.getenv("SP_PASSWORD"),
+)
 
 with ClientSession() as session:
     session.login(credentials)
@@ -103,9 +117,9 @@ with ClientSession() as session:
 ## API Overview
 
 - Session & authentication: `ClientSession`, `LoginCredentials`, `PasswordChange` — see `src/ibm_storage_protect/session.py`.
-- Data operations (backup/restore/group): `DataClient`, `SingleBackupClient`, `SingleRestoreClient`, `GroupHandle` — see `src/ibm_storage_protect/data_client/`.
-- Query operations: `QueryClient` and models in `src/ibm_storage_protect/data_models/query.py`.
-- Control operations (filespace & metadata): `ControlClient` and models in `src/ibm_storage_protect/data_models/filespace.py` and `object.py`.
+- Data operations (backup/restore/group): `DataClient`, `BackupClient`, `RestoreClient`, `GroupHandle` — see `src/ibm_storage_protect/data_client/`.
+- Query operations: QueryClient in `src/ibm_storage_protect/query.py` and models in `src/ibm_storage_protect/data_models/query.py`.
+- Control operations (filespace & metadata): ControlClient in `src/ibm_storage_protect/control.py` and models in `src/ibm_storage_protect/data_models/filespace.py` and `object.py`.
 - Errors: `TSMError` subclasses and mapping logic under `src/ibm_storage_protect/errors/`.
 
 Refer to the in-repo design guides for operational details and examples:
@@ -141,12 +155,31 @@ with ClientSession() as session:
     print("Restore complete")
 ```
 
-## Tests
+## Tests & Mocking
 
-There are pytest-based integration tests under `examples/*/tests` and `tests/` at repository root. To run unit/integration tests (requires native client libs and test configuration):
+The SDK includes a built-in Mock C API that allows running the entire test suite immediately without installing native C libraries on your machine.
 
+### Running Tests with the Mock C API
+By default, the SDK dynamically detects `pytest` and loads the Mock C API instead of the native libraries. To run all unit and integration tests under the mock:
 ```bash
-pytest -q
+pytest
+```
+
+### Running Tests with Real C API Libraries
+To verify behavior against actual native C client libraries/DLLs and TSM server configurations:
+1. Set the environment variable `SP_USE_MOCK_C_API=0` (or `false`) to disable the mock.
+2. Specify the path to the native client library with the `IBM_SP_API_LIB` environment variable (if not located in standard search paths).
+
+**Example (PowerShell):**
+```powershell
+$env:SP_USE_MOCK_C_API="0"
+$env:IBM_SP_API_LIB="C:\Program Files\Tivoli\TSM\api\bin64\dsmtca64.dll"
+pytest
+```
+
+**Example (Linux / macOS):**
+```bash
+SP_USE_MOCK_C_API=0 IBM_SP_API_LIB=/usr/lib/libtsmapi64.so pytest
 ```
 
 ## Contributing

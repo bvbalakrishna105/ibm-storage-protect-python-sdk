@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Hardware>
+
+
+	<Processor version="1" timestamp="1779706278">
+		<Index IsKey="1">1</Index>
+		<ID IsKey="1">0d9a9e4a27fa3ffed044b6ebf3ca70c9</ID>
+		<Family>Xeon</Family>
+		<MaxClockSpeed>2100</MaxClockSpeed>
+		<CurrentClockSpeed>2100</CurrentClockSpeed>
+		<ExternalClockSpeed>0</ExternalClockSpeed>
+		<Manufacturer>GenuineIntel</Manufacturer>
+		<ChipFamily>6</ChipFamily>
+		<ChipModel>106</ChipModel>
+		<ChipStepping>6</ChipStepping>
+		<ChipFeatures>394525695</ChipFeatures>
+		<FloatingPointUnitPresent>Y</FloatingPointUnitPresent>
+		<VirtualModeExtensions>Y</VirtualModeExtensions>
+		<DebugExtensionPresent>Y</DebugExtensionPresent>
+		<PageSizeExtensions>Y</PageSizeExtensions>
+		<TimeStampCounter>Y</TimeStampCounter>
+		<ModelSpecificRegisters>Y</ModelSpecificRegisters>
+		<PhysicalAddressExtensions>Y</PhysicalAddressExtensions>
+		<MachineCheckExceptions>Y</MachineCheckExceptions>
+		<CMPXCHG8BInstructionSupport>Y</CMPXCHG8BInstructionSupport>
+		<OnchipAPIC>Y</OnchipAPIC>
+		<FastSystemCall>Y</FastSystemCall>
+		<MemoryTypeRangeRegisters>Y</MemoryTypeRangeRegisters>
+		<PageGlobalEnable>Y</PageGlobalEnable>
+		<MachineCheckArchitecture>Y</MachineCheckArchitecture>
+		<ConditionalMoveInstruction>Y</ConditionalMoveInstruction>
+		<PageAttributeTable>Y</PageAttributeTable>
+		<_36-bitPageSizeExtension>Y</_36-bitPageSizeExtension>
+		<ProcessSerialNumberEnabled>N</ProcessSerialNumberEnabled>
+		<MMXtmTechonlogy>Y</MMXtmTechonlogy>
+		<FastFloatingPointSaveRestore>Y</FastFloatingPointSaveRestore>
+		<StreamingSIMDExtensions>Y</StreamingSIMDExtensions>
+		<AMD3DNowtmTechnology>N</AMD3DNowtmTechnology>
+		<CPUEnabled>H</CPUEnabled>
+	</Processor>
+
+	<PhysicalProcessor version="1" timestamp="1779706280">
+		<Id IsKey="1">1</Id>
+		<CorePerPackageCount>4</CorePerPackageCount>
+		<LogicalProcPerCore>1</LogicalProcPerCore>
+		<Manufacturer>Intel</Manufacturer>
+		<Family>Xeon</Family>
+		<Type></Type>
+		<CpuFreq>2100</CpuFreq>
+		<L2CacheSize>1280</L2CacheSize>
+		<L3CacheSize>36864</L3CacheSize>
+		<Brandname>Intel(R) Xeon(R) Gold 5318S CPU @ 2.10GHz</Brandname>
+		<Signature>0x000606A6</Signature>
+		<Is64BitSupported>Y</Is64BitSupported>
+		<ActiveProcessorCount>4</ActiveProcessorCount>
+		<ActiveCoreCount>4</ActiveCoreCount>
+	</PhysicalProcessor>
+
+	<IPAddress version="1" timestamp="1779706280">
+		<Index>1</Index>
+		<Address IsKey="1">9.11.53.39</Address>
+		<Hostname>vbb-db2-test</Hostname>
+		<Domain>storage.tucson.ibm.com</Domain>
+		<Subnet>255.255.255.255</Subnet>
+		<Gateway></Gateway>
+		<PrimaryDNS>9.11.227.25</PrimaryDNS>
+		<SecondaryDNS>9.0.0.1</SecondaryDNS>
+		<PermanentMacAddress>00:50:56:AD:12:6C</PermanentMacAddress>
+		<IPV6Address></IPV6Address>
+	</IPAddress>
+
+	<IPv6Address version="1" timestamp="1779706280">
+		<Index>1</Index>
+		<Address IsKey="1">2002:90b:e006:52:250:56ff:fead:126c</Address>
+		<Hostname>spclientashish</Hostname>
+		<Domain></Domain>
+		<Subnet>64</Subnet>
+		<Gateway></Gateway>
+		<PrimaryDNS>9.11.227.25</PrimaryDNS>
+		<SecondaryDNS>9.0.0.1</SecondaryDNS>
+		<PermanentMacAddress>00:50:56:ad:12:6c</PermanentMacAddress>
+		<Scope>global</Scope>
+		<AdapterName>eth0</AdapterName>
+	</IPv6Address>
+
+	<IPv6Address version="1" timestamp="1779706280">
+		<Index>2</Index>
+		<Address IsKey="1">fe80::250:56ff:fead:126c</Address>
+		<Hostname>spclientashish</Hostname>
+		<Domain></Domain>
+		<Subnet>64</Subnet>
+		<Gateway>fe80:0000:0000:0000:c203:8000:3450:d1d0</Gateway>
+		<PrimaryDNS>9.11.227.25</PrimaryDNS>
+		<SecondaryDNS>9.0.0.1</SecondaryDNS>
+		<PermanentMacAddress>00:50:56:ad:12:6c</PermanentMacAddress>
+		<Scope>link</Scope>
+		<AdapterName>eth0</AdapterName>
+	</IPv6Address>
+
+	<NetworkAdapter version="1" timestamp="1779706280">
+		<Index>1</Index>
+		<ID IsKey="1">c3196c033fda3d32d666ab2f45e122a9</ID>
+		<PermanentAddress>00:50:56:AD:12:6C</PermanentAddress>
+		<CurrentAddress>00:50:56:AD:12:6C</CurrentAddress>
+		<Type>Ethernet Adapter</Type>
+		<Model>eth0</Model>
+	</NetworkAdapter>
+
+	<VirtualMachineGuest version="1" timestamp="1779706280">
+		<UUID>F8312D42-32C4-C141-BE47-7D49183336BE</UUID>
+		<HypervisorType>VMware</HypervisorType>
+	</VirtualMachineGuest>
+
+</Hardware>
