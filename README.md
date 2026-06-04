@@ -26,11 +26,41 @@ Key repository components:
 
 Note: The SDK uses `ctypes` to load the native client library; make sure the native client is installed on the host, or set `IBM_SP_API_LIB` to the library absolute path.
 
-## Installation (from source)
+## Installation
+
+### From Wheel File
+
+If you have the pre-built wheel file (e.g., `ibm_storage_protect_sdk-0.1.0-py3-none-any.whl`):
+
+#### Windows (PowerShell)
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install ibm_storage_protect_sdk-0.1.0-py3-none-any.whl
+```
+
+#### Windows (Command Prompt)
+```cmd
+python -m venv venv
+.\venv\Scripts\activate.bat
+pip install --upgrade pip
+pip install ibm_storage_protect_sdk-0.1.0-py3-none-any.whl
+```
+
+#### Linux / macOS
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install ibm_storage_protect_sdk-0.1.0-py3-none-any.whl
+```
+
+### From Source
 
 Install the package and development requirements in a virtual environment:
 
-### Windows (PowerShell)
+#### Windows (PowerShell)
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
@@ -38,7 +68,7 @@ pip install --upgrade pip
 pip install -e .
 ```
 
-### Windows (Command Prompt)
+#### Windows (Command Prompt)
 ```cmd
 python -m venv venv
 .\venv\Scripts\activate.bat
@@ -46,7 +76,7 @@ pip install --upgrade pip
 pip install -e .
 ```
 
-### Linux / macOS
+#### Linux / macOS
 ```bash
 python -m venv venv
 source venv/bin/activate
@@ -61,6 +91,10 @@ pip install -e .
   - Linux/macOS/AIX:
 
     ```bash
+    export DSMI_DIR=/opt/tivoli/tsm/client/api/bin64
+    export DSMI_CONFIG=/opt/tivoli/tsm/client/api/bin64/dsm.opt
+    export DSMI_LOG=/tmp
+    export LD_LIBRARY_PATH=/opt/tivoli/tsm/client/api/bin64:$LD_LIBRARY_PATH
     export IBM_SP_API_LIB=/opt/tivoli/tsm/client/api/bin64/libApiTSM64.so
     ```
 
@@ -70,6 +104,160 @@ pip install -e .
     setx IBM_SP_API_LIB "C:\Program Files\Tivoli\TSM\api\bin64\dsmtca64.dll"
     ```
 
+## Creating Your First Application
+
+After installing the SDK from the wheel file, follow these steps to create a simple backup and restore application:
+
+### Step 1: Set Up Environment Variables
+
+Before running your application, configure the required environment variables:
+
+**Linux/macOS/AIX:**
+```bash
+export DSMI_DIR=/opt/tivoli/tsm/client/api/bin64
+export DSMI_CONFIG=/opt/tivoli/tsm/client/api/bin64/dsm.opt
+export DSMI_LOG=/tmp
+export LD_LIBRARY_PATH=/opt/tivoli/tsm/client/api/bin64:$LD_LIBRARY_PATH
+export IBM_SP_API_LIB=/opt/tivoli/tsm/client/api/bin64/libApiTSM64.so
+
+# Set your credentials
+export SP_NODE=your_node_name
+export SP_PASSWORD=your_password
+```
+
+**Windows (PowerShell):**
+```powershell
+$env:IBM_SP_API_LIB="C:\Program Files\Tivoli\TSM\api\bin64\dsmtca64.dll"
+$env:SP_NODE="your_node_name"
+$env:SP_PASSWORD="your_password"
+```
+
+### Step 2: Create Your Application File
+
+Create a new Python file (e.g., `my_backup_app.py`) with the following code:
+
+```python
+#!/usr/bin/env python3
+"""
+Simple IBM Storage Protect Backup and Restore Application
+"""
+
+import os
+from ibm_storage_protect import ClientSession, DataClient
+from ibm_storage_protect.data_models.session import LoginCredentials
+from ibm_storage_protect.data_models.backup import BackupRequest
+from ibm_storage_protect.data_models.restore import RestoreRequest
+from ibm_storage_protect.logger.config import configure_logging, LogConfig
+
+
+def main():
+    # Step 1: Configure logging
+    configure_logging(LogConfig(
+        enable_user_log=True,
+        enable_error_log=True,
+        log_dir="./logs",
+        console_level="INFO"
+    ))
+    
+    # Step 2: Set up credentials
+    credentials = LoginCredentials(
+        node=os.getenv("SP_NODE"),
+        password=os.getenv("SP_PASSWORD"),
+    )
+    
+    # Step 3: Create session and login
+    with ClientSession() as session:
+        print("Logging in to IBM Storage Protect...")
+        session.login(credentials)
+        print("Login successful!")
+        
+        # Initialize data client
+        data_client = DataClient(session)
+        
+        # Step 4: Perform a single backup
+        print("\n--- Performing Backup ---")
+        backup_spec = BackupRequest(
+            Key="/myapp/data/config.txt",
+            Body=b"This is my application configuration data",
+            Filespace="/"
+        )
+        
+        backup_result = data_client.backup(backup_spec)
+        print(f"Backup Status: {backup_result.Status}")
+        print(f"Backed up object: {backup_result.Key}")
+        
+        # Step 5: Perform a single restore
+        print("\n--- Performing Restore ---")
+        restore_spec = RestoreRequest(
+            Key="/myapp/data/config.txt",
+            Filespace="/"
+        )
+        
+        restore_result = data_client.restore(restore_spec)
+        
+        # Write restored data to a file
+        restored_data = b""
+        for chunk in restore_result.Body:
+            restored_data += chunk
+        
+        output_file = "./restored_config.txt"
+        with open(output_file, "wb") as f:
+            f.write(restored_data)
+        
+        print(f"Restore Status: {restore_result.Status}")
+        print(f"Restored object: {restore_result.Key}")
+        print(f"Data written to: {output_file}")
+        print(f"Restored content: {restored_data.decode('utf-8')}")
+        
+        print("\n--- Application completed successfully! ---")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### Step 3: Run Your Application
+
+```bash
+# Make sure your virtual environment is activated
+source venv/bin/activate  # Linux/macOS
+# or
+.\venv\Scripts\Activate.ps1  # Windows PowerShell
+
+# Run the application
+python my_backup_app.py
+```
+
+### Expected Output
+
+```
+Logging in to IBM Storage Protect...
+Login successful!
+
+--- Performing Backup ---
+Backup Status: Success
+Backed up object: /myapp/data/config.txt
+
+--- Performing Restore ---
+Restore Status: Success
+Restored object: /myapp/data/config.txt
+Data written to: ./restored_config.txt
+Restored content: This is my application configuration data
+
+--- Application completed successfully! ---
+```
+
+### Next Steps
+
+Once you have the basic backup and restore working:
+
+1. **Backup files from disk**: Read file contents and backup using `open()` and file streams
+2. **Handle larger files**: Use generators to stream data in chunks (4MB for backup, 1MB for restore)
+3. **Add error handling**: Wrap operations in try-except blocks to handle `TSMError` exceptions
+4. **Query backed up objects**: Use `QueryClient` to list and search for backed up data
+5. **Batch operations**: Use `batch_backup()` and `batch_restore()` for multiple files
+6. **Group operations**: Use transactional group backups for related files that must succeed or fail together
+
 ## Quick Start
 
 Example: configure logging, open a session, and run a simple backup.
@@ -78,7 +266,7 @@ Example: configure logging, open a session, and run a simple backup.
 from ibm_storage_protect import ClientSession, DataClient
 from ibm_storage_protect.data_models.session import LoginCredentials
 from ibm_storage_protect.data_models.backup import BackupRequest
-from ibm_storage_protect.log_config import configure_logging, LogConfig
+from ibm_storage_protect.logger.config import configure_logging, LogConfig
 
 configure_logging(LogConfig(
     enable_user_log=True,
