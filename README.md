@@ -18,11 +18,15 @@ Key repository components:
 - Rich exception mapping from native C return codes to Python `TSMError` subclasses with retry hints.
 - Structured, configurable logging (text and JSON outputs) with session/operation correlation IDs.
 
+## Supported Platforms
+
+- Linux
+
 ## Requirements
 
 - Python 3.10+
 - Pydantic v2
-- The IBM Storage Protect Client API libraries for your platform (dsmtca64.dll / libApiTSM64.so / libApiTSM64.a).
+- The IBM Storage Protect Client API libraries (libApiTSM64.so)
 
 Note: The SDK uses `ctypes` to load the native client library; make sure the native client is installed on the host, or set `IBM_SP_API_LIB` to the library absolute path.
 
@@ -32,23 +36,6 @@ Note: The SDK uses `ctypes` to load the native client library; make sure the nat
 
 If you have the pre-built wheel file (e.g., `ibm_storage_protect_sdk-0.1.0-py3-none-any.whl`):
 
-#### Windows (PowerShell)
-```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install --upgrade pip
-pip install ibm_storage_protect_sdk-0.1.0-py3-none-any.whl
-```
-
-#### Windows (Command Prompt)
-```cmd
-python -m venv venv
-.\venv\Scripts\activate.bat
-pip install --upgrade pip
-pip install ibm_storage_protect_sdk-0.1.0-py3-none-any.whl
-```
-
-#### Linux / macOS
 ```bash
 python -m venv venv
 source venv/bin/activate
@@ -60,23 +47,6 @@ pip install ibm_storage_protect_sdk-0.1.0-py3-none-any.whl
 
 Install the package and development requirements in a virtual environment:
 
-#### Windows (PowerShell)
-```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install --upgrade pip
-pip install -e .
-```
-
-#### Windows (Command Prompt)
-```cmd
-python -m venv venv
-.\venv\Scripts\activate.bat
-pip install --upgrade pip
-pip install -e .
-```
-
-#### Linux / macOS
 ```bash
 python -m venv venv
 source venv/bin/activate
@@ -86,23 +56,15 @@ pip install -e .
 
 ## Environment
 
-- To override the dynamic library path (highest precedence):
+To override the dynamic library path (highest precedence):
 
-  - Linux/macOS/AIX:
-
-    ```bash
-    export DSMI_DIR=/opt/tivoli/tsm/client/api/bin64
-    export DSMI_CONFIG=/opt/tivoli/tsm/client/api/bin64/dsm.opt
-    export DSMI_LOG=/tmp
-    export LD_LIBRARY_PATH=/opt/tivoli/tsm/client/api/bin64:$LD_LIBRARY_PATH
-    export IBM_SP_API_LIB=/opt/tivoli/tsm/client/api/bin64/libApiTSM64.so
-    ```
-
-  - Windows (PowerShell):
-
-    ```powershell
-    setx IBM_SP_API_LIB "C:\Program Files\Tivoli\TSM\api\bin64\dsmtca64.dll"
-    ```
+```bash
+export DSMI_DIR=/opt/tivoli/tsm/client/api/bin64
+export DSMI_CONFIG=/opt/tivoli/tsm/client/api/bin64/dsm.opt
+export DSMI_LOG=/tmp
+export LD_LIBRARY_PATH=/opt/tivoli/tsm/client/api/bin64:$LD_LIBRARY_PATH
+export IBM_SP_API_LIB=/opt/tivoli/tsm/client/api/bin64/libApiTSM64.so
+```
 
 ## Creating Your First Application
 
@@ -112,7 +74,6 @@ After installing the SDK from the wheel file, follow these steps to create a sim
 
 Before running your application, configure the required environment variables:
 
-**Linux/macOS/AIX:**
 ```bash
 export DSMI_DIR=/opt/tivoli/tsm/client/api/bin64
 export DSMI_CONFIG=/opt/tivoli/tsm/client/api/bin64/dsm.opt
@@ -123,13 +84,6 @@ export IBM_SP_API_LIB=/opt/tivoli/tsm/client/api/bin64/libApiTSM64.so
 # Set your credentials
 export SP_NODE=your_node_name
 export SP_PASSWORD=your_password
-```
-
-**Windows (PowerShell):**
-```powershell
-$env:IBM_SP_API_LIB="C:\Program Files\Tivoli\TSM\api\bin64\dsmtca64.dll"
-$env:SP_NODE="your_node_name"
-$env:SP_PASSWORD="your_password"
 ```
 
 ### Step 2: Create Your Application File
@@ -220,9 +174,7 @@ if __name__ == "__main__":
 
 ```bash
 # Make sure your virtual environment is activated
-source venv/bin/activate  # Linux/macOS
-# or
-.\venv\Scripts\Activate.ps1  # Windows PowerShell
+source venv/bin/activate
 
 # Run the application
 python my_backup_app.py
@@ -354,18 +306,11 @@ pytest
 ```
 
 ### Running Tests with Real C API Libraries
-To verify behavior against actual native C client libraries/DLLs and TSM server configurations:
+To verify behavior against actual native C client libraries and TSM server configurations:
 1. Set the environment variable `SP_USE_MOCK_C_API=0` (or `false`) to disable the mock.
 2. Specify the path to the native client library with the `IBM_SP_API_LIB` environment variable (if not located in standard search paths).
 
-**Example (PowerShell):**
-```powershell
-$env:SP_USE_MOCK_C_API="0"
-$env:IBM_SP_API_LIB="C:\Program Files\Tivoli\TSM\api\bin64\dsmtca64.dll"
-pytest
-```
-
-**Example (Linux / macOS):**
+**Example:**
 ```bash
 SP_USE_MOCK_C_API=0 IBM_SP_API_LIB=/usr/lib/libtsmapi64.so pytest
 ```

@@ -66,3 +66,16 @@ graph LR
 ### 2.3. Sharing & Access Rights (GAP-02)
 - **Technical Context**: In multi-user and multi-tenant environments, nodes frequently need to access filespaces belonging to peer applications.
 - **Recommendation**: Implement `BAAccessClient` in [control.py](../../src/ibm_storage_protect/control.py) exposing `set_access_rules()`, `list_access_rules()`, and `revoke_access_rules()` wrapping `dsmSetAccess`, `dsmQueryAccess`, and `dsmDeleteAccess`.
+
+
+---
+
+## 3. Future Planned Supported Platforms
+
+The following platforms are planned for future support:
+
+- **Windows**
+- **AIX**
+- **macOS**
+
+Currently, the SDK officially supports Linux only. Support for additional platforms will be added in future releases as development resources permit.
