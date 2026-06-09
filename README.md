@@ -22,6 +22,22 @@ Key repository components:
 
 - Linux
 
+## Prerequisites
+
+Before using this SDK, ensure the following components are installed and configured:
+
+### IBM Storage Protect Client API (BA Client)
+
+- **Version**: 8.1.x and higher
+- **Installation**: The IBM Storage Protect Client API binary must be installed on the machine where the SDK will be used
+- **Library**: The native client library (libApiTSM64.so) must be accessible to the SDK
+
+### IBM Storage Protect Server Ecosystem
+
+- **Version**: IBM Storage Protect Server 8.1.x and higher
+- **Purpose**: Required to perform backup, restore, query, and control operations
+- **Configuration**: The server must be properly configured and accessible from the client machine
+
 ## Requirements
 
 - Python 3.10+
@@ -34,13 +50,13 @@ Note: The SDK uses `ctypes` to load the native client library; make sure the nat
 
 ### From Wheel File
 
-If you have the pre-built wheel file (e.g., `ibm_storage_protect_sdk-0.1.0-py3-none-any.whl`):
+If you have the pre-built wheel file (e.g., `ibm_storage_protect_sdk-1.0.0-py3-none-any.whl`):
 
 ```bash
 python -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
-pip install ibm_storage_protect_sdk-0.1.0-py3-none-any.whl
+pip install ibm_storage_protect_sdk-1.0.0-py3-none-any.whl
 ```
 
 ### From Source
